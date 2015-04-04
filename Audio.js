@@ -12,12 +12,10 @@ function Audio(){
   // If you sound to come out, connect it to the destination
   this.mute.connect( this.ctx.destination );
 
-
   this.analyser.frequencyBinCount = 1024;
   this.analyser.array = new Uint8Array( this.analyser.frequencyBinCount );
 
-
-
+  
   var data = this.processAudio();
   
   this.texture = new THREE.DataTexture(
