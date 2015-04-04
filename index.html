@@ -16,8 +16,10 @@
     <script src = "lib/TrackballControls.js"        ></script>
       
 
-    <script src = "Audio.js"                        ></script>
+    <script src = "AudioController.js"              ></script>
     <script src = "UserAudio.js"                    ></script>
+    <script src = "Stream.js"                       ></script>
+
 
 
     <script>
@@ -27,6 +29,7 @@
       
       var audioMesh;
 
+      // Setting up shaders
       var shaders = new ShaderLoader( 'shaders' );
 
       shaders.shaderSetLoaded = function(){
@@ -37,27 +40,47 @@
       shaders.load( 'vs-audio' , 'audio' , 'vertex'   );
       shaders.load( 'fs-audio' , 'audio' , 'fragment' );
 
-      var audio = new Audio();
 
+
+      /*
+
+         Setting up Audio
+
+      */
+      var audio = new AudioController();
+
+      var userAudio = new UserAudio( audio.ctx , audio.gain );
+
+
+      // Muting audio, so we don't have feedback
+      audio.mute.gain.value = 0;
+
+
+
+
+      // Normals For the Material
       var uniforms = {
   
         t_audio: { type:"t"  , value: audio.texture }
 
       }
 
-      var userAudio = new UserAudio( audio.ctx , audio.gain );
-
-      audio.mute.gain.value = 0;
-
 
       function init(){
+
+        /*
+
+
+           Setting up THREE.js Scene
+
+
+        */
 
         var w = window.innerWidth;
         var h = window.innerHeight;
 
         camera = new THREE.PerspectiveCamera( 65 , w/h , .001 , 4 );
         camera.position.z = 2;
-       // camera.position.y = -.4;
 
         scene = new THREE.Scene();
 
@@ -70,9 +93,16 @@
 
         window.addEventListener( 'resize', onWindowResize, false );
 
-
         controls = new THREE.TrackballControls( camera );
 
+
+
+        /*
+
+
+           Actual Audio Object
+
+        */
 
         var geo = new THREE.IcosahedronGeometry( .2 , 6 );
 
@@ -95,8 +125,10 @@
       function animate(){
 
         requestAnimationFrame( animate );
+        
         controls.update();
         audio.update();
+        
         renderer.render( scene , camera );
 
       }
