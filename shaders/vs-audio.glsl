@@ -6,6 +6,7 @@ varying vec4 vAudio;
 varying float vAudioLookup;
 
 varying vec3 vNorm;
+varying vec2 vUv;
 
 void main(){
 
@@ -20,10 +21,12 @@ void main(){
 
   vAudio = audio;
 
+  vUv = uv;
+
 
   // To visualize the audio, we will displace the position
   // by a value based on the audio, along the normal
-  vec3 pos = position + .1 * length( audio ) * normal;
+  vec3 pos = position;// + .1 * length( audio ) * normal;
 
   // Use this position to get the final position 
   gl_Position = projectionMatrix * modelViewMatrix * vec4( pos , 1.);
